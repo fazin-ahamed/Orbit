@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import {
   ReactFlow,
   Node,
@@ -50,7 +50,7 @@ const WorkflowBuilderContent: React.FC<WorkflowBuilderProps> = ({
   onExecute,
   readOnly = false,
 }) => {
-  const reactFlowWrapper = useRef<HTMLDivElement>(null);
+  
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const { screenToFlowPosition } = useReactFlow();

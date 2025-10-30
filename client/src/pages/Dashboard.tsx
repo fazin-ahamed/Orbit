@@ -8,7 +8,6 @@ import {
   Users,
   FolderKanban,
   Workflow,
-  TrendingUp,
   Plus,
   Activity,
   UserPlus,

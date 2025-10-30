@@ -2,17 +2,17 @@ import React from 'react';
 import { Handle, Position, NodeProps } from '@xyflow/react';
 import { Zap } from 'lucide-react';
 
-interface TriggerNodeData {
-  label: string;
-  type: string;
-  config: {
-    event?: string;
-    schedule?: string;
-    conditions?: any[];
+const TriggerNode: React.FC<NodeProps> = ({ data, selected }) => {
+  const triggerData = data as {
+    label: string;
+    type: string;
+    config: {
+      event?: string;
+      schedule?: string;
+      conditions?: any[];
+    };
   };
-}
-
-const TriggerNode: React.FC<NodeProps<TriggerNodeData>> = ({ data, selected }) => {
+  
   return (
     <div className={`px-4 py-2 shadow-md rounded-md bg-white border-2 min-w-[200px] ${
       selected ? 'border-blue-500' : 'border-green-500'
@@ -28,17 +28,17 @@ const TriggerNode: React.FC<NodeProps<TriggerNodeData>> = ({ data, selected }) =
           <Zap className="w-4 h-4 text-green-600" />
         </div>
         <div className="ml-2">
-          <div className="text-sm font-bold">{data.label}</div>
+          <div className="text-sm font-bold">{triggerData.label}</div>
           <div className="text-xs text-gray-500">Trigger</div>
         </div>
       </div>
 
       <div className="mt-2 text-xs">
-        {data.config.event && (
-          <div>Event: {data.config.event}</div>
+        {triggerData.config?.event && (
+          <div>Event: {triggerData.config.event}</div>
         )}
-        {data.config.schedule && (
-          <div>Schedule: {data.config.schedule}</div>
+        {triggerData.config?.schedule && (
+          <div>Schedule: {triggerData.config.schedule}</div>
         )}
       </div>
     </div>

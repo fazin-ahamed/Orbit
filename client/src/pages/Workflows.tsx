@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -29,7 +29,6 @@ import {
   Plus,
   Play,
   Edit,
-  Trash2,
   Eye,
   Search,
   Clock,
@@ -139,7 +138,7 @@ export default function Workflows() {
     }
   }
 
-  const handleExecuteWorkflow = async (nodes: any[], edges: any[]) => {
+  const handleExecuteWorkflow = async () => {
     if (!selectedWorkflow) return
 
     try {

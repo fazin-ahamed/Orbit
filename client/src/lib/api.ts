@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 // Types
 export interface User {
@@ -323,11 +323,7 @@ class ApiService {
     return this.refreshPromise;
   }
 
-  private logout() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-  }
+  
 
   // Generic request methods
   private async get<T>(url: string, params?: any): Promise<T> {
@@ -380,15 +376,13 @@ class ApiService {
     try {
       await this.post('/auth/logout');
     } finally {
-      this.clearAuthData();
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
     }
   }
 
-  private clearAuthData() {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('refreshToken');
-    localStorage.removeItem('user');
-  }
+  
 
   async getProfile(): Promise<User> {
     return this.get<User>('/auth/profile');

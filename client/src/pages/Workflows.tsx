@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, ReactNode } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -36,15 +36,35 @@ import {
   XCircle
 } from 'lucide-react'
 
+interface StatusIconProps {
+  status: string
+  className?: string
+}
+
+const StatusIcon: React.FC<StatusIconProps> = ({ status, className }) => {
+  const iconClass = `h-4 w-4 ${className || ''}`
+  
+  switch (status) {
+    case 'completed':
+      return <CheckCircle className={iconClass} />
+    case 'running':
+      return <Play className={iconClass} />
+    case 'failed':
+      return <XCircle className={iconClass} />
+    default:
+      return <Clock className={iconClass} />
+  }
+}
+
 export default function Workflows() {
   const { toast } = useToast()
-  const [activeTab, setActiveTab] = useState('workflows')
+  const [activeTab, setActiveTab] = useState<string>('workflows')
   const [workflows, setWorkflows] = useState<Workflow[]>([])
   const [executions, setExecutions] = useState<Execution[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [searchTerm, setSearchTerm] = useState('')
-  const [showCreateWorkflow, setShowCreateWorkflow] = useState(false)
-  const [showWorkflowBuilder, setShowWorkflowBuilder] = useState(false)
+  const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [searchTerm, setSearchTerm] = useState<string>('')
+  const [showCreateWorkflow, setShowCreateWorkflow] = useState<boolean>(false)
+  const [showWorkflowBuilder, setShowWorkflowBuilder] = useState<boolean>(false)
   const [selectedWorkflow, setSelectedWorkflow] = useState<Workflow | null>(null)
   const [builderNodes, setBuilderNodes] = useState<any[]>([])
   const [builderEdges, setBuilderEdges] = useState<any[]>([])
@@ -59,7 +79,7 @@ export default function Workflows() {
     loadData()
   }, [activeTab])
 
-  const loadData = async () => {
+  const loadData = async (): Promise<void> => {
     try {
       setIsLoading(true)
 
@@ -82,7 +102,7 @@ export default function Workflows() {
     }
   }
 
-  const handleCreateWorkflow = async () => {
+  const handleCreateWorkflow = async (): Promise<void> => {
     try {
       const workflow = await api.createWorkflow({
         ...workflowForm,
@@ -113,7 +133,7 @@ export default function Workflows() {
     }
   }
 
-  const handleSaveWorkflow = async (nodes: any[], edges: any[]) => {
+  const handleSaveWorkflow = async (nodes: any[], edges: any[]): Promise<void> => {
     if (!selectedWorkflow) return
 
     try {
@@ -138,7 +158,7 @@ export default function Workflows() {
     }
   }
 
-  const handleExecuteWorkflow = async () => {
+  const handleExecuteWorkflow = async (): Promise<void> => {
     if (!selectedWorkflow) return
 
     try {
@@ -162,7 +182,7 @@ export default function Workflows() {
     }
   }
 
-  const openWorkflowBuilder = (workflow: Workflow) => {
+  const openWorkflowBuilder = (workflow: Workflow): void => {
     setSelectedWorkflow(workflow)
     setBuilderNodes(workflow.nodes || [])
     setBuilderEdges(workflow.edges || [])
@@ -174,17 +194,45 @@ export default function Workflows() {
     workflow.description?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
-  const getStatusIcon = (status: string) => {
+  const getStatusBadgeVariant = (status: string) => {
     switch (status) {
+      case 'active':
       case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return 'default' as const
+      case 'draft':
       case 'running':
-        return <Play className="h-4 w-4 text-blue-600" />
+        return 'secondary' as const
       case 'failed':
-        return <XCircle className="h-4 w-4 text-red-600" />
+        return 'destructive' as const
       default:
-        return <Clock className="h-4 w-4 text-gray-600" />
+        return 'outline' as const
     }
+  }
+
+  const getStatusIconComponent = (status: string): ReactNode => {
+    return <StatusIcon status={status} className="h-4 w-4" />
+  }
+
+  const getEmptyState = (title: string, description: string): ReactNode => {
+    return (
+      <>
+        <WorkflowIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+        <h3 className="text-sm font-medium text-gray-900">{title}</h3>
+        <p className="text-sm text-gray-500 mt-1">{description}</p>
+      </>
+    )
+  }
+
+  const getEmptyExecutionState = (): ReactNode => {
+    return (
+      <>
+        <Clock className="mx-auto h-12 w-12 text-gray-400 mb-4" />
+        <h3 className="text-sm font-medium text-gray-900">No executions yet</h3>
+        <p className="text-sm text-gray-500 mt-1">
+          Workflow executions will appear here.
+        </p>
+      </>
+    )
   }
 
   return (
@@ -294,11 +342,7 @@ export default function Workflows() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant={
-                                workflow.status === 'active' ? 'default' :
-                                workflow.status === 'draft' ? 'secondary' :
-                                'outline'
-                              }>
+                              <Badge variant={getStatusBadgeVariant(workflow.status)}>
                                 {workflow.status}
                               </Badge>
                             </TableCell>
@@ -327,11 +371,10 @@ export default function Workflows() {
                         {filteredWorkflows.length === 0 && (
                           <TableRow>
                             <TableCell colSpan={5} className="text-center py-12">
-                              <WorkflowIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                              <h3 className="text-sm font-medium text-gray-900">No workflows found</h3>
-                              <p className="text-sm text-gray-500 mt-1">
-                                {searchTerm ? 'Try adjusting your search terms.' : 'Create your first workflow to get started.'}
-                              </p>
+                              {getEmptyState(
+                                'No workflows found',
+                                searchTerm ? 'Try adjusting your search terms.' : 'Create your first workflow to get started.'
+                              )}
                             </TableCell>
                           </TableRow>
                         )}
@@ -411,20 +454,15 @@ export default function Workflows() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {executions.map((execution) => (
+                    {executions.map((execution: Execution) => (
                       <TableRow key={execution.id}>
                         <TableCell className="font-medium">
                           {execution.workflow_name}
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center space-x-2">
-                            {getStatusIcon(execution.status)}
-                            <Badge variant={
-                              execution.status === 'completed' ? 'default' :
-                              execution.status === 'running' ? 'secondary' :
-                              execution.status === 'failed' ? 'destructive' :
-                              'outline'
-                            }>
+                            {getStatusIconComponent(execution.status)}
+                            <Badge variant={getStatusBadgeVariant(execution.status)}>
                               {execution.status}
                             </Badge>
                           </div>
@@ -445,11 +483,7 @@ export default function Workflows() {
                     {executions.length === 0 && (
                       <TableRow>
                         <TableCell colSpan={5} className="text-center py-12">
-                          <Clock className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                          <h3 className="text-sm font-medium text-gray-900">No executions yet</h3>
-                          <p className="text-sm text-gray-500 mt-1">
-                            Workflow executions will appear here.
-                          </p>
+                          {getEmptyExecutionState()}
                         </TableCell>
                       </TableRow>
                     )}
@@ -482,11 +516,7 @@ export default function Workflows() {
               ) : (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
-                    <WorkflowIcon className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                    <h3 className="text-sm font-medium text-gray-900">No workflow selected</h3>
-                    <p className="text-sm text-gray-500 mt-1">
-                      Select a workflow from the Workflows tab to edit it here.
-                    </p>
+                    {getEmptyState('No workflow selected', 'Select a workflow from the Workflows tab to edit it here.')}
                   </div>
                 </div>
               )}

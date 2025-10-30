@@ -1,21 +1,16 @@
 {
   "version": 2,
+  "name": "businessos-platform",
   "builds": [
     {
-      "src": "client/package.json",
-      "use": "@vercel/static-build",
+      "src": "package.json",
+      "use": "@vercel/node",
       "config": {
-        "distDir": "client/dist"
+        "distDir": "."
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/client/dist/$1"
-    }
-  ],
   "env": {
-    "VITE_API_BASE_URL": "https://your-businessos-api.onrender.com"
+    "NODE_ENV": "production"
   }
 }

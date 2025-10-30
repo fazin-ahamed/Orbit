@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: businessos-api
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: businessos-db
+          property: connectionString
+      - key: JWT_SECRET
+        value: your-super-secret-jwt-key-change-this-in-production
+      - key: JWT_REFRESH_SECRET
+        value: your-super-secret-refresh-key-change-this-in-production
+
+databases:
+  - name: businessos-db
+    plan: free

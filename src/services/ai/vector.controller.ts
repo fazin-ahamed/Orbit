@@ -188,12 +188,12 @@ export class VectorController {
           db.raw('COUNT(DISTINCT source_id) as unique_sources'),
           db.raw('AVG(LENGTH(content_chunk)) as avg_content_length')
         )
-        .first();
+        .first() as any;
 
       res.json({
-        total_vectors: parseInt(stats.total_vectors || '0'),
-        unique_sources: parseInt(stats.unique_sources || '0'),
-        avg_content_length: Math.round(parseFloat(stats.avg_content_length || '0')),
+        total_vectors: parseInt(stats?.total_vectors?.toString() || '0'),
+        unique_sources: parseInt(stats?.unique_sources?.toString() || '0'),
+        avg_content_length: Math.round(parseFloat(stats?.avg_content_length?.toString() || '0')),
       });
 
     } catch (error) {

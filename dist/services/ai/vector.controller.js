@@ -160,9 +160,9 @@ class VectorController {
                 .select(db_1.db.raw('COUNT(*) as total_vectors'), db_1.db.raw('COUNT(DISTINCT source_id) as unique_sources'), db_1.db.raw('AVG(LENGTH(content_chunk)) as avg_content_length'))
                 .first();
             res.json({
-                total_vectors: parseInt(stats.total_vectors || '0'),
-                unique_sources: parseInt(stats.unique_sources || '0'),
-                avg_content_length: Math.round(parseFloat(stats.avg_content_length || '0')),
+                total_vectors: parseInt(stats?.total_vectors?.toString() || '0'),
+                unique_sources: parseInt(stats?.unique_sources?.toString() || '0'),
+                avg_content_length: Math.round(parseFloat(stats?.avg_content_length?.toString() || '0')),
             });
         }
         catch (error) {

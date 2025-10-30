@@ -175,10 +175,10 @@ export class AIController {
 
       const startTime = Date.now();
 
-      // Create completion
+      // Create completion with proper message format
       const completion = await openai.chat.completions.create({
         model: model || aiConfig.models?.chat || provider.models.chat,
-        messages: messages,
+        messages: (messages as any) as OpenAI.Chat.Completions.ChatCompletionMessageParam[],
         max_tokens: max_tokens || 1000,
         temperature: temperature || 0.7,
         stream: stream || false,

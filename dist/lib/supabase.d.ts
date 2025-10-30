@@ -26,6 +26,6 @@ export declare class DatabaseManager {
         error?: string;
     }>;
 }
-export declare const supabase: SupabaseClient<any, "public", "public", any, any> | null;
+export declare const supabase: SupabaseClient<any, "public", "public", any, any>;
 export declare const dbManager: typeof DatabaseManager;
 //# sourceMappingURL=supabase.d.ts.map

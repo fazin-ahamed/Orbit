@@ -147,7 +147,7 @@ class AIController {
                 baseURL: provider.baseUrl,
             });
             const startTime = Date.now();
-            // Create completion
+            // Create completion with proper message format
             const completion = await openai.chat.completions.create({
                 model: model || aiConfig.models?.chat || provider.models.chat,
                 messages: messages,

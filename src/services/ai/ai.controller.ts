@@ -63,7 +63,11 @@ export class AIController {
   // Get available AI providers and models
   static async getProviders(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       // Get tenant's AI configuration
       const tenantConfig = await db('tenants')
@@ -94,9 +98,13 @@ export class AIController {
   // Configure AI provider for tenant
   static async configureProvider(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
       const userId = (req.user as any)?.id || 'system';
       const { provider, apiKey, models } = req.body;
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       // Validate provider
       if (!AI_PROVIDERS[provider]) {
@@ -142,9 +150,13 @@ export class AIController {
   // Create chat completion
   static async createChatCompletion(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
       const userId = (req.user as any)?.id || 'system';
       const { messages, model, max_tokens, temperature, stream } = chatCompletionSchema.parse(req.body);
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -266,9 +278,13 @@ export class AIController {
   // Create embeddings
   static async createEmbedding(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
       const userId = (req.user as any)?.id || 'system';
       const { input, model } = embeddingSchema.parse(req.body);
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       if (!userId) {
         return res.status(401).json({ error: 'User not authenticated' });
@@ -356,7 +372,11 @@ export class AIController {
   // Get AI usage statistics
   static async getUsage(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       // Get current month's AI usage
       const startOfMonth = new Date();
@@ -400,7 +420,11 @@ export class AIController {
   // Test AI connectivity
   static async testConnection(req: Request, res: Response) {
     try {
-      const tenantId = req.tenantId || 'default';
+      const tenantId = req.tenantId;
+
+      if (!tenantId) {
+        return res.status(400).json({ error: 'Tenant ID is required' });
+      }
 
       // Get tenant's AI configuration
       const tenant = await db('tenants')

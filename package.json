@@ -4,7 +4,8 @@
   "description": "BusinessOS MVP - Multi-tenant SaaS Platform",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "cd client && npm run build",
+    "build:backend": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "migrate": "ts-node --transpile-only ./node_modules/.bin/knex --knexfile knexfile.ts migrate:latest",

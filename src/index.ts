@@ -36,7 +36,7 @@ app.use(limiter);
 
 // Tenant resolution middleware (placeholder - resolve from subdomain/header)
 app.use((req: Request, res: Response, next: NextFunction) => {
-  const tenantId = req.headers['x-tenant-id'] as string || 'default'; // TODO: Implement subdomain resolution
+  const tenantId = req.headers['x-tenant-id'] as string || '00000000-0000-0000-0000-000000000001'; // Default tenant UUID
   req['tenantId'] = tenantId;
   next();
 });

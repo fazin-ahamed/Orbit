@@ -1,16 +1,23 @@
 {
   "version": 2,
-  "name": "businessos-platform",
   "builds": [
     {
-      "src": "package.json",
-      "use": "@vercel/node",
+      "src": "package.json", 
+      "use": "@vercel/static-build",
       "config": {
-        "distDir": "."
+        "distDir": "client/dist"
       }
     }
   ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "headers": { "cache-control": "s-maxage=31536000,immutable" },
+      "dest": "/client/dist/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/client/dist/index.html"
+    }
+  ]
 }

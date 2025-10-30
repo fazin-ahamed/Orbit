@@ -145,6 +145,31 @@ export interface Task {
   project_name?: string;
 }
 
+// Project creation data types
+export interface CreateProjectData {
+  name: string;
+  description?: string;
+  status?: string;
+  start_date?: string;
+  due_date?: string;
+  budget?: number;
+  currency?: string;
+  priority?: string;
+  assigned_to?: string;
+}
+
+export interface CreateTaskData {
+  project_id?: string;
+  title: string;
+  description?: string;
+  status?: string;
+  priority?: string;
+  due_date?: string;
+  estimated_hours?: number;
+  assigned_to?: string;
+  tags?: string[];
+}
+
 // Workflow types
 export interface Workflow {
   id: string;

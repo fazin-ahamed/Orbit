@@ -3,22 +3,21 @@ services:
     name: businessos-api
     env: node
     plan: free
+    # Build from root, but specify backend build context
     buildCommand: npm install && npm run build
-    startCommand: npm start
+    # Start from built dist directory
+    startCommand: node dist/index.js
     healthCheckPath: /health
+    # Environment variables
     envVars:
       - key: NODE_ENV
         value: production
       - key: PORT
         value: 10000
-      - key: DATABASE_URL
-        fromDatabase:
-          name: businessos-db
-          property: connectionString
-      - key: JWT_SECRET
-        value: your-super-secret-jwt-key-change-this-in-production
-      - key: JWT_REFRESH_SECRET
-        value: your-super-secret-refresh-key-change-this-in-production
+      # Set these in Render dashboard:
+      # - key: DATABASE_URL
+      # - key: JWT_SECRET
+      # - key: JWT_REFRESH_SECRET
 
 databases:
   - name: businessos-db
